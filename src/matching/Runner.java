@@ -27,7 +27,7 @@ public class Runner extends Application {
 
 	private static Stage mainStage;
                  
-	private Scene titleScene;
+	private Scene titleScene; 
 	private Scene gameScene;
 
 	public static void main(String[] args) {
