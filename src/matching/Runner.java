@@ -26,7 +26,7 @@ public class Runner extends Application {
 	private int gameSize = 0;
 
 	private static Stage mainStage;
-
+          
 	private Scene titleScene;
 	private Scene gameScene;
 
