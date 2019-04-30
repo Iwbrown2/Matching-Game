@@ -1,4 +1,5 @@
 package matching;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -20,8 +21,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Runner extends Application {
-	
-	private final int[] ROWSIZE = {4, 6, 8, 10, 12};
+
+	private final int[] ROWSIZE = { 4, 6, 8, 10, 12 };
 	private int gameSize = 0;
 
 	private static Stage mainStage;
@@ -36,9 +37,9 @@ public class Runner extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		mainStage = stage;
-		
+
 		titleScene = new Scene(getTitleScene(), 600, 700);
-		
+
 		mainStage.setTitle("Mathching Game");
 		mainStage.setScene(titleScene);
 		mainStage.show();
@@ -48,13 +49,13 @@ public class Runner extends Application {
 		VBox root = new VBox();
 		root.setSpacing(20);
 		root.setAlignment(Pos.CENTER);
-		
+
 		Label title = new Label("Matching Game");
 		title.setFont(Font.font("Roboto", 20));
-		
+
 		Label size = new Label("Select which board size you want to play with.");
 		size.setFont(Font.font("Roboto", 20));
-		
+
 		ComboBox<Integer> boardSizes = new ComboBox<Integer>();
 		for (int i : ROWSIZE) {
 			boardSizes.getItems().add(i);
@@ -68,42 +69,43 @@ public class Runner extends Application {
 				gameScene = new Scene(getGameScene(buttons));
 			}
 		});
-		
+
 		Button start = new Button("Start");
 		start.setOnAction(e -> {
 			if (gameSize != 0) {
 				mainStage.setScene(gameScene);
 			}
 		});
-		
+
 		Button close = new Button("Close");
 		close.setOnAction(e -> Platform.exit());
-		
+
 		Button help = new Button("Help");
 		help.setOnAction(e -> {
-			Alert alert = new Alert(AlertType.NONE, "Click on the icons and match each item to another that looks similar.", ButtonType.OK);
+			Alert alert = new Alert(AlertType.NONE,
+					"Click on the icons and match each item to another that looks similar.", ButtonType.OK);
 			alert.showAndWait();
 
 			if (alert.getResult() == ButtonType.OK) {
 				alert.close();
 			}
 		});
-		
+
 		HBox buttons = new HBox();
 		buttons.getChildren().addAll(start, help, close);
 		buttons.setSpacing(20);
 		buttons.setAlignment(Pos.CENTER);
-		
+
 		root.getChildren().addAll(title, size, boardSizes, buttons);
-		
+
 		return root;
 	}
-	
+
 	private GridPane getGameScene(Button[] buttons) {
-		for (int i=0;i<buttons.length;i++) {
+		for (int i = 0; i < buttons.length; i++) {
 			buttons[i] = new Button("A");
 		}
-		
+
 		for (Button b : buttons) {
 			b.setStyle("-fx-background-color: white;");
 			b.setOnMouseEntered(e -> {
@@ -117,13 +119,13 @@ public class Runner extends Application {
 			b.setOnMousePressed(e -> b.setStyle("-fx-background-color: #f2f2f2;-fx-border-color: #85bb65;"));
 			b.setOnMouseReleased(e -> b.setStyle("-fx-background-color: white;-fx-border-color: #85bb65;"));
 		}
-		
+
 		GridPane root = new GridPane();
 		int index = 0;
 		for (int i = 0; i < gameSize; i++) {
 			for (int j = 0; j < gameSize; j++) {
 				GridPane.setRowIndex(buttons[index], i);
-				GridPane.setColumnIndex(buttons[index], j);				
+				GridPane.setColumnIndex(buttons[index], j);
 				buttons[index].setPrefSize(50, 50);
 				buttons[index].setFont(new Font("Roboto", 13));
 				root.getChildren().addAll(buttons[index]);
@@ -132,10 +134,10 @@ public class Runner extends Application {
 		}
 		root.setHgap(10);
 		root.setVgap(10);
-		
+
 		return root;
 	}
-	
+
 	public static void defaultCursor() {
 		mainStage.getScene().setCursor(Cursor.DEFAULT);
 	}
