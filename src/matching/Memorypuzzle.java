@@ -30,7 +30,7 @@ public class Memorypuzzle extends Application {
     private Parent createContent() {
         Pane root = new Pane();
         root.setPrefSize(600, 600);
-
+   
         char c = 'A';
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < NUM_OF_PAIRS; i++) {
