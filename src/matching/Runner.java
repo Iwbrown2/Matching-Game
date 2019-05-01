@@ -227,7 +227,7 @@ public class Runner extends Application {
                     clickCount = 2;
                 });
             }
-        }
+        } 
  
         public boolean isOpen() {
             return text.getOpacity() == 1;
