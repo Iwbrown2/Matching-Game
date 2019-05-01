@@ -40,7 +40,7 @@ public class Runner extends Application {
 
 		titleScene = new Scene(getTitleScene(), 600, 700);
 
-		mainStage.setTitle("Mathching Game");
+		mainStage.setTitle("Matching Game");
 		mainStage.setScene(titleScene);
 		mainStage.show();
 	}
