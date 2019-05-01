@@ -118,7 +118,7 @@ public class Memorypuzzle extends Application {
         public boolean hasSameValue(Tile other) {
             return text.getText().equals(other.text.getText());
         }
-    }
+    } 
 
     public static void main(String[] args) {
         launch(args);
