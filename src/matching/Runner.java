@@ -35,18 +35,16 @@ import javafx.util.Duration;
 public class Runner extends Application {
 
 	private final int[] ROWSIZE = { 4, 6, 8, 10, 12 };
+	private final int WIDTH = 600, HEIGHT = 700;
+
+	private int numPairs = 0;
+	private int clickCount = 2;
 	private int gameSize = 0;
 
 	private static Stage mainStage;
-                 
-	private Scene titleScene; 
+	private Scene titleScene;
 	private Scene gameScene;
-	
-	private static final int NUM_OF_PAIRS = 18;
-    private static final int NUM_PER_ROW = 14;
-
-    private Tile selected = null;
-    private int clickCount = 2;
+	private Tile selected = null;
 
 	public static void main(String[] args) {
 		launch(args);
@@ -56,14 +54,14 @@ public class Runner extends Application {
 	public void start(Stage stage) throws Exception {
 		mainStage = stage;
 
-		titleScene = new Scene(getTitleScene(), 600, 700);
+		titleScene = new Scene(getTitleContent(), WIDTH, HEIGHT);
 
 		mainStage.setTitle("Matching Game");
 		mainStage.setScene(titleScene);
 		mainStage.show();
 	}
 
-	private Parent getTitleScene() {
+	private Parent getTitleContent() {
 		VBox root = new VBox();
 		root.setSpacing(20);
 		root.setAlignment(Pos.CENTER);
@@ -82,10 +80,7 @@ public class Runner extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
 				gameSize = arg2;
-
-				Button[] buttons = new Button[gameSize * gameSize];
-				gameScene = new Scene(createContent());
-//				gameScene = new Scene(getGameScene(buttons));
+				gameScene = new Scene(createContent(), WIDTH, HEIGHT);
 			}
 		});
 
@@ -120,60 +115,29 @@ public class Runner extends Application {
 		return root;
 	}
 
-	private GridPane getGameScene(Button[] buttons) {
-		for (int i = 0; i < buttons.length; i++) {
-			buttons[i] = new Button("A");
-		}
-
-		for (Button b : buttons) {
-			b.setStyle("-fx-background-color: white;");
-			b.setOnMouseEntered(e -> {
-				b.setStyle("-fx-background-color: white;-fx-border-color: #85bb65;");
-				clickCursor();
-			});
-			b.setOnMouseExited(e -> {
-				b.setStyle("-fx-background-color: white;");
-				defaultCursor();
-			});
-			b.setOnMousePressed(e -> b.setStyle("-fx-background-color: #f2f2f2;-fx-border-color: #85bb65;"));
-			b.setOnMouseReleased(e -> b.setStyle("-fx-background-color: white;-fx-border-color: #85bb65;"));
-		}
-
-		GridPane root = new GridPane();
-		int index = 0;
-		for (int i = 0; i < gameSize; i++) {
-			for (int j = 0; j < gameSize; j++) {
-				GridPane.setRowIndex(buttons[index], i);
-				GridPane.setColumnIndex(buttons[index], j);
-				buttons[index].setPrefSize(50, 50);
-				buttons[index].setFont(new Font("Roboto", 13));
-				root.getChildren().addAll(buttons[index]);
-				index++;
-			}
-		}
-		root.setHgap(10);
-		root.setVgap(10);
-
+	private Parent getWinContent() {
+		// TODO Implement
+		VBox root = new VBox();
 		return root;
 	}
-	
-	private Parent createContent() {
-        char c = (char)33;
-        List<Tile> tiles = new ArrayList<>();
-        for (int i = 0; i < (gameSize * gameSize)/2; i++) {
-            tiles.add(new Tile(String.valueOf(c)));
-            tiles.add(new Tile(String.valueOf(c)));
-            c++;
-        }
 
-        Collections.shuffle(tiles);
-        
-        GridPane root = new GridPane();
-        root.setHgap(10);
-        root.setVgap(10);
-        root.setPadding(new Insets(40));
-        int index = 0;
-        for (int i = 0; i < gameSize; i++) {
+	private Parent createContent() {
+		char c = (char) 33;
+		List<Tile> tiles = new ArrayList<>();
+		for (int i = 0; i < (gameSize * gameSize) / 2; i++) {
+			tiles.add(new Tile(String.valueOf(c)));
+			tiles.add(new Tile(String.valueOf(c)));
+			c++;
+		}
+
+		Collections.shuffle(tiles);
+
+		GridPane root = new GridPane();
+		root.setHgap(10);
+		root.setVgap(10);
+		root.setPadding(new Insets(40));
+		int index = 0;
+		for (int i = 0; i < gameSize; i++) {
 			for (int j = 0; j < gameSize; j++) {
 				Tile tile = tiles.get(index);
 				GridPane.setRowIndex(tile, i);
@@ -183,75 +147,90 @@ public class Runner extends Application {
 			}
 		}
 
-        return root;
-    }
+		return root;
+	}
 
-    private class Tile extends StackPane {
-    	
-        private Text text = new Text();
-        private final int BOXSIZE = 50;
+	private class Tile extends StackPane {
 
-        public Tile(String value) {
-            Rectangle border = new Rectangle(BOXSIZE, BOXSIZE);
-            border.setFill(null);
-            border.setStroke(Color.BLACK);
+		private Text text = new Text();
+		private final int BOXSIZE = 50;
 
-            text.setText(value);
-            text.setFont(Font.font("Comic Sans MS", 30));
+		public Tile(String value) {
+			Rectangle border = new Rectangle(BOXSIZE, BOXSIZE);
+			border.setFill(null);
+			border.setStroke(Color.BLACK);
 
-            setAlignment(Pos.CENTER);
-            getChildren().addAll(border, text);
+			text.setText(value);
+			text.setFont(Font.font("Comic Sans MS", 30));
 
-            setOnMouseClicked(this::handleMouseClick);
-            close();
-        }
+			setAlignment(Pos.CENTER);
+			getChildren().addAll(border, text);
 
-        public void handleMouseClick(MouseEvent event) {
-            if (isOpen() || clickCount == 0)
-                return;
+			setOnMouseClicked(this::handleMouseClick);
+			close();
+		}
 
-            clickCount--;
+		public void handleMouseClick(MouseEvent event) {
+			if (isOpen() || clickCount == 0)
+				return;
 
-            if (selected == null) {
-                selected = this;
-                open(() -> {});
-            }
-            else {
-                open(() -> {
-                    if (!hasSameValue(selected)) {
-                        selected.close();
-                        this.close();
-                    }
+			clickCount--;
 
-                    selected = null;
-                    clickCount = 2;
-                });
-            }
-        } 
- 
-        public boolean isOpen() {
-            return text.getOpacity() == 1;
-        }
+			if (selected == null) {
+				selected = this;
+				System.out.println(selected);
+				open(() -> {
+				});
+			} else {
+				open(() -> {
+					if (!hasSameValue(selected)) {
+						selected.close();
+						this.close();
+						System.out.println(selected);
+						System.out.println(this);
+						selected = null;
+						clickCount = 2;
+					} else {
+						numPairs++;
+						if (numPairs == (gameSize * gameSize)/2) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+							mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
+						}
+						System.out.println(numPairs);
+						selected = null;
+						clickCount = 2;
+					}
+				});
+			}
+		}
 
-        public void open(Runnable action) {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
-            ft.setToValue(1);
-            ft.setOnFinished(e -> action.run());
-            ft.play();
-        }
+		public boolean isOpen() {
+			return text.getOpacity() == 1;
+		}
 
-        public void close() {
-            FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
-            ft.setToValue(0);
-            ft.play();
-        }
+		public void open(Runnable action) {
+			FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
+			ft.setToValue(1);
+			ft.setOnFinished(e -> action.run());
+			ft.play();
+		}
 
-        public boolean hasSameValue(Tile other) {
-        	if (this != other)
-        		return text.getText().equals(other.text.getText());
-        	return false;
-        }
-    }
+		public void close() {
+			FadeTransition ft = new FadeTransition(Duration.seconds(0.5), text);
+			ft.setToValue(0);
+			ft.play();
+		}
+
+		public boolean hasSameValue(Tile other) {
+			if (this != other)
+				return text.getText().equals(other.text.getText());
+			return false;
+		}
+	}
 
 	public static void defaultCursor() {
 		mainStage.getScene().setCursor(Cursor.DEFAULT);
