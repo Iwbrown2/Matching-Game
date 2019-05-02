@@ -37,6 +37,12 @@ public class Runner extends Application {
 	private final int[] ROWSIZE = { 4, 6, 8, 10, 12 };
 	private final int WIDTH = 600, HEIGHT = 700;
 
+	private enum Difficulty {
+		Easy, Medium, Hard
+	};
+
+	private Difficulty difficulty;
+
 	private int numPairs = 0;
 	private int clickCount = 2;
 	private int gameSize = 0;
@@ -69,20 +75,51 @@ public class Runner extends Application {
 		Label title = new Label("Matching Game");
 		title.setFont(Font.font("Roboto", 20));
 
-		Label size = new Label("Select which board size you want to play with.");
+		Label size = new Label("Select which difficulty you want to play with.");
 		size.setFont(Font.font("Roboto", 20));
 
-		ComboBox<Integer> boardSizes = new ComboBox<Integer>();
-		for (int i : ROWSIZE) {
-			boardSizes.getItems().add(i);
-		}
-		boardSizes.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
+		ComboBox<Difficulty> difficultyLevels = new ComboBox<>();
+		difficultyLevels.getItems().setAll(Difficulty.values());
+		difficultyLevels.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Difficulty>() {
 			@Override
-			public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
-				gameSize = arg2;
-				gameScene = new Scene(createContent(), WIDTH, HEIGHT);
+			public void changed(ObservableValue<? extends Difficulty> arg0, Difficulty arg1, Difficulty arg2) {
+				difficulty = arg2;
+				switch (difficulty) {
+				case Easy:
+					gameSize = 4;
+					System.out.println(gameSize);
+					break;
+				case Medium:
+					gameSize = 8;
+					System.out.println(gameSize);
+					break;
+				case Hard:
+					gameSize = 12;
+					System.out.println(gameSize);
+					break;
+				default:
+					gameSize = 0;
+					System.out.println(gameSize);
+					break;
+				}
+				System.out.println(difficulty.name());
+				gameScene = new Scene(createContent());
 			}
 		});
+
+		// ComboBox<Integer> boardSizes = new ComboBox<Integer>();
+		// for (int i : ROWSIZE) {
+		// boardSizes.getItems().add(i);
+		// }
+		// boardSizes.getSelectionModel().selectedItemProperty().addListener(new
+		// ChangeListener<Integer>() {
+		// @Override
+		// public void changed(ObservableValue<? extends Integer> arg0, Integer arg1,
+		// Integer arg2) {
+		// gameSize = arg2;
+		// gameScene = new Scene(createContent());
+		// }
+		// });
 
 		Button start = new Button("Start");
 		start.setOnAction(e -> {
@@ -110,7 +147,7 @@ public class Runner extends Application {
 		buttons.setSpacing(20);
 		buttons.setAlignment(Pos.CENTER);
 
-		root.getChildren().addAll(title, size, boardSizes, buttons);
+		root.getChildren().addAll(title, size, difficultyLevels, buttons);
 
 		return root;
 	}
@@ -190,7 +227,7 @@ public class Runner extends Application {
 						System.out.println(this);
 					} else {
 						numPairs++;
-						if (numPairs == (gameSize * gameSize)/2) {
+						if (numPairs == (gameSize * gameSize) / 2) {
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
