@@ -158,7 +158,7 @@ public class Runner extends Application {
 	}
 	
 	private Parent createContent() {
-        char c = 'A';
+        char c = (char)33;
         List<Tile> tiles = new ArrayList<>();
         for (int i = 0; i < (gameSize * gameSize)/2; i++) {
             tiles.add(new Tile(String.valueOf(c)));
@@ -247,7 +247,9 @@ public class Runner extends Application {
         }
 
         public boolean hasSameValue(Tile other) {
-            return text.getText().equals(other.text.getText());
+        	if (this != other)
+        		return text.getText().equals(other.text.getText());
+        	return false;
         }
     }
 
