@@ -188,8 +188,6 @@ public class Runner extends Application {
 						this.close();
 						System.out.println(selected);
 						System.out.println(this);
-						selected = null;
-						clickCount = 2;
 					} else {
 						numPairs++;
 						if (numPairs == (gameSize * gameSize)/2) {
@@ -201,9 +199,9 @@ public class Runner extends Application {
 							mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
 						}
 						System.out.println(numPairs);
-						selected = null;
-						clickCount = 2;
 					}
+					selected = null;
+					clickCount = 2;
 				});
 			}
 		}
