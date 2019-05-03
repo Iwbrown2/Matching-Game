@@ -199,8 +199,9 @@ public class Runner extends Application {
 
 		public Tile(String value) {
 			Rectangle border = new Rectangle(BOXSIZE, BOXSIZE);
+			border.setStrokeWidth(3);
 			border.setFill(null);
-			border.setStroke(Color.BLACK);
+			border.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
 
 			text.setText(value);
 			text.setFont(Font.font("Comic Sans MS", 30));
@@ -220,7 +221,6 @@ public class Runner extends Application {
 
 			if (selected == null) {
 				selected = this;
-				System.out.println(selected);
 				open(() -> {
 				});
 			} else {
@@ -228,8 +228,6 @@ public class Runner extends Application {
 					if (!hasSameValue(selected)) {
 						selected.close();
 						this.close();
-						System.out.println(selected);
-						System.out.println(this);
 					} else {
 						numPairs++;
 						if (numPairs == (gameSize * gameSize) / 2) {
@@ -240,7 +238,6 @@ public class Runner extends Application {
 							}
 							mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
 						}
-						System.out.println(numPairs);
 					}
 					selected = null;
 					clickCount = 2;
