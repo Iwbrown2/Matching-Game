@@ -83,7 +83,6 @@ public class Runner extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
 				gameSize = arg2;
-				gameScene = new Scene(createContent());
 			}
 		});
 
@@ -99,29 +98,24 @@ public class Runner extends Application {
 					for (int i = 0; i < ROWSIZE.length / 2; i++) {
 						boardSizes.getItems().add(ROWSIZE[i]);
 					}
-					System.out.println(gameSize);
 					break;
 				case Medium:
 					for (int i : ROWSIZE) {
 						boardSizes.getItems().add(i);
 					}
-					System.out.println(gameSize);
 					break;
 				case Hard:
 					for (int i = ROWSIZE.length / 2; i < ROWSIZE.length; i++) {
 						boardSizes.getItems().add(ROWSIZE[i]);
 					}
-					System.out.println(gameSize);
 					break;
 				case Debug:
 					mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
 					break;
 				default:
 					gameSize = 0;
-					System.out.println(gameSize);
 					break;
 				}
-				System.out.println(difficulty.name());
 				gameScene = new Scene(createContent());
 			}
 		});
