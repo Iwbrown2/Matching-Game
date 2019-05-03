@@ -39,7 +39,7 @@ public class Runner extends Application {
 
 	private enum Difficulty {
 		Easy, Medium, Hard
-	};
+	}
 
 	private Difficulty difficulty;
 
@@ -78,23 +78,39 @@ public class Runner extends Application {
 		Label size = new Label("Select which difficulty you want to play with.");
 		size.setFont(Font.font("Roboto", 20));
 
+		ComboBox<Integer> boardSizes = new ComboBox<Integer>();
+		boardSizes.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
+			@Override
+			public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
+				gameSize = arg2;
+				gameScene = new Scene(createContent());
+			}
+		});
+
 		ComboBox<Difficulty> difficultyLevels = new ComboBox<>();
 		difficultyLevels.getItems().setAll(Difficulty.values());
 		difficultyLevels.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Difficulty>() {
 			@Override
 			public void changed(ObservableValue<? extends Difficulty> arg0, Difficulty arg1, Difficulty arg2) {
 				difficulty = arg2;
+				boardSizes.getItems().clear();
 				switch (difficulty) {
 				case Easy:
-					gameSize = 4;
+					for (int i = 0; i < ROWSIZE.length / 2; i++) {
+						boardSizes.getItems().add(ROWSIZE[i]);
+					}
 					System.out.println(gameSize);
 					break;
 				case Medium:
-					gameSize = 8;
+					for (int i : ROWSIZE) {
+						boardSizes.getItems().add(i);
+					}
 					System.out.println(gameSize);
 					break;
 				case Hard:
-					gameSize = 12;
+					for (int i = ROWSIZE.length / 2; i < ROWSIZE.length; i++) {
+						boardSizes.getItems().add(ROWSIZE[i]);
+					}
 					System.out.println(gameSize);
 					break;
 				default:
@@ -106,20 +122,6 @@ public class Runner extends Application {
 				gameScene = new Scene(createContent());
 			}
 		});
-
-		// ComboBox<Integer> boardSizes = new ComboBox<Integer>();
-		// for (int i : ROWSIZE) {
-		// boardSizes.getItems().add(i);
-		// }
-		// boardSizes.getSelectionModel().selectedItemProperty().addListener(new
-		// ChangeListener<Integer>() {
-		// @Override
-		// public void changed(ObservableValue<? extends Integer> arg0, Integer arg1,
-		// Integer arg2) {
-		// gameSize = arg2;
-		// gameScene = new Scene(createContent());
-		// }
-		// });
 
 		Button start = new Button("Start");
 		start.setOnAction(e -> {
@@ -147,7 +149,7 @@ public class Runner extends Application {
 		buttons.setSpacing(20);
 		buttons.setAlignment(Pos.CENTER);
 
-		root.getChildren().addAll(title, size, difficultyLevels, buttons);
+		root.getChildren().addAll(title, size, difficultyLevels, boardSizes, buttons);
 
 		return root;
 	}
