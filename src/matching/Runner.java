@@ -38,7 +38,7 @@ public class Runner extends Application {
 	private final int WIDTH = 600, HEIGHT = 700;
 
 	private enum Difficulty {
-		Easy, Medium, Hard
+		Easy, Medium, Hard, Debug
 	}
 
 	private Difficulty difficulty;
@@ -112,6 +112,9 @@ public class Runner extends Application {
 						boardSizes.getItems().add(ROWSIZE[i]);
 					}
 					System.out.println(gameSize);
+					break;
+				case Debug:
+					mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
 					break;
 				default:
 					gameSize = 0;
