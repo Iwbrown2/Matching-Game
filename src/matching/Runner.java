@@ -83,6 +83,7 @@ public class Runner extends Application {
 			@Override
 			public void changed(ObservableValue<? extends Integer> arg0, Integer arg1, Integer arg2) {
 				gameSize = arg2;
+				gameScene = new Scene(createContent());
 			}
 		});
 
