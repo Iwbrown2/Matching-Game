@@ -161,6 +161,17 @@ public class Runner extends Application {
 	private Parent getWinContent() {
 		// TODO Implement
 		VBox root = new VBox();
+		root.setAlignment(Pos.CENTER);
+		root.setSpacing(15);
+		Label winText = new Label("Congratulations, you win!");
+		winText.setFont(Font.font(25));
+		Label timePassed = new Label("Add time here");
+		timePassed.setFont(Font.font(20));
+		Button playAgain = new Button("Play Again"); 
+		Button exit = new Button("Exit");
+		playAgain.setOnAction(e -> mainStage.setScene(titleScene));
+		exit.setOnAction(e -> Platform.exit());
+		root.getChildren().addAll(winText, timePassed, playAgain, exit);
 		return root;
 	}
 
