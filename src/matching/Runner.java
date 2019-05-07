@@ -57,6 +57,16 @@ public class Runner extends Application {
 	private Scene titleScene;
 	private Scene gameScene;
 	private Tile selected = null;
+	
+	Label timer = new Label("Time Elapsed: 00:00");
+	Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), ev -> {
+		secondsPassed++;
+		if (secondsPassed == 60) {
+			minutesPassed++;
+			secondsPassed = 0;
+		}
+		timer.setText("Time Elapsed: " + minutesPassed + ":" + secondsPassed);
+    }));
 
 	public static void main(String[] args) {
 		launch(args);
@@ -130,6 +140,8 @@ public class Runner extends Application {
 		Button start = new Button("Start");
 		start.setOnAction(e -> {
 			if (gameSize != 0) {
+				secondsPassed = 0;
+				minutesPassed = 0;
 				mainStage.setScene(gameScene);
 			}
 		});
@@ -159,19 +171,21 @@ public class Runner extends Application {
 	}
 
 	private Parent getWinContent() {
-		// TODO Implement
+		Label winText = new Label("Congratulations, you win!");
+		winText.setFont(Font.font(25));
+		
+		timer.setFont(Font.font(20));
+		Button playAgain = new Button("Play Again"); 
+		playAgain.setOnAction(e -> mainStage.setScene(new Scene(getTitleContent(), WIDTH, HEIGHT)));
+		
+		Button exit = new Button("Exit");
+		exit.setOnAction(e -> Platform.exit());
+
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(15);
-		Label winText = new Label("Congratulations, you win!");
-		winText.setFont(Font.font(25));
-		Label timePassed = new Label("Add time here");
-		timePassed.setFont(Font.font(20));
-		Button playAgain = new Button("Play Again"); 
-		Button exit = new Button("Exit");
-		playAgain.setOnAction(e -> mainStage.setScene(titleScene));
-		exit.setOnAction(e -> Platform.exit());
-		root.getChildren().addAll(winText, timePassed, playAgain, exit);
+		root.getChildren().addAll(winText, timer, playAgain, exit);
+		
 		return root;
 	}
 
@@ -198,16 +212,7 @@ public class Runner extends Application {
 				index++;
 			}
 		}
-		
-		Label timer = new Label("Time Elapsed: 00:00");
-		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), ev -> {
-			secondsPassed++;
-			if (secondsPassed == 60) {
-				minutesPassed++;
-				secondsPassed = 0;
-			}
-			timer.setText("Time Elapsed: " + minutesPassed + ":" + secondsPassed);
-	    }));
+				
 	    timeline.setCycleCount(Animation.INDEFINITE);
 	    timeline.play();
 		
@@ -258,6 +263,7 @@ public class Runner extends Application {
 					} else {
 						numPairs++;
 						if (numPairs == (gameSize * gameSize) / 2) {
+							timeline.stop();
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
