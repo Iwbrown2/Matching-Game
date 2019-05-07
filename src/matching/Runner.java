@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -21,6 +24,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -46,6 +50,8 @@ public class Runner extends Application {
 	private int numPairs = 0;
 	private int clickCount = 2;
 	private int gameSize = 0;
+	int secondsPassed = 0;
+	int minutesPassed = 0;
 
 	private static Stage mainStage;
 	private Scene titleScene;
@@ -169,20 +175,34 @@ public class Runner extends Application {
 
 		Collections.shuffle(tiles);
 
-		GridPane root = new GridPane();
-		root.setHgap(10);
-		root.setVgap(10);
-		root.setPadding(new Insets(40));
+		GridPane game = new GridPane();
+		game.setPadding(new Insets(40));
 		int index = 0;
 		for (int i = 0; i < gameSize; i++) {
 			for (int j = 0; j < gameSize; j++) {
 				Tile tile = tiles.get(index);
 				GridPane.setRowIndex(tile, i);
 				GridPane.setColumnIndex(tile, j);
-				root.getChildren().add(tile);
+				game.getChildren().add(tile);
 				index++;
 			}
 		}
+		
+		Label timer = new Label("Time Elapsed: 00:00");
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2), ev -> {
+			secondsPassed++;
+			if (secondsPassed == 60) {
+				minutesPassed++;
+				secondsPassed = 0;
+			}
+			timer.setText("Time Elapsed: " + minutesPassed + ":" + secondsPassed);
+	    }));
+	    timeline.setCycleCount(Animation.INDEFINITE);
+	    timeline.play();
+		
+		BorderPane root = new BorderPane();
+		root.setTop(timer);
+		root.setCenter(game);
 
 		return root;
 	}
@@ -200,6 +220,7 @@ public class Runner extends Application {
 
 			text.setText(value);
 			text.setFont(Font.font("Comic Sans MS", 30));
+			text.setFill(Color.color(Math.random(), Math.random(), Math.random()));
 
 			setAlignment(Pos.CENTER);
 			getChildren().addAll(border, text);
