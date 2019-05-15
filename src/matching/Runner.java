@@ -42,7 +42,7 @@ public class Runner extends Application {
 	private final int WIDTH = 600, HEIGHT = 700;
 
 	private enum Difficulty {
-		Easy, Medium, Hard, Debug
+		Easy, Medium, Hard
 	}
 
 	private Difficulty difficulty;
@@ -77,6 +77,7 @@ public class Runner extends Application {
 		mainStage = stage;
 
 		titleScene = new Scene(getTitleContent(), WIDTH, HEIGHT);
+		timer.setFont(Font.font("Roboto", 20));
 
 		mainStage.setTitle("Matching Game");
 		mainStage.setScene(titleScene);
@@ -91,8 +92,8 @@ public class Runner extends Application {
 		Label title = new Label("Matching Game");
 		title.setFont(Font.font("Roboto", 20));
 
-		Label size = new Label("Select which difficulty you want to play with.");
-		size.setFont(Font.font("Roboto", 20));
+		Label difficultyLevel = new Label("Select which difficulty you want to play with.");
+		difficultyLevel.setFont(Font.font("Roboto", 20));
 
 		ComboBox<Integer> boardSizes = new ComboBox<Integer>();
 		boardSizes.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>() {
@@ -102,6 +103,9 @@ public class Runner extends Application {
 				gameScene = new Scene(createContent());
 			}
 		});
+
+		Label boardSize = new Label("Select how big each row is. (Based on difficulty level)");
+		boardSize.setFont(Font.font("Roboto", 20));
 
 		ComboBox<Difficulty> difficultyLevels = new ComboBox<>();
 		difficultyLevels.getItems().setAll(Difficulty.values());
@@ -125,9 +129,6 @@ public class Runner extends Application {
 					for (int i = ROWSIZE.length / 2; i < ROWSIZE.length; i++) {
 						boardSizes.getItems().add(ROWSIZE[i]);
 					}
-					break;
-				case Debug:
-					mainStage.setScene(new Scene(getWinContent(), WIDTH, HEIGHT));
 					break;
 				default:
 					gameSize = 0;
@@ -165,7 +166,7 @@ public class Runner extends Application {
 		buttons.setSpacing(20);
 		buttons.setAlignment(Pos.CENTER);
 
-		root.getChildren().addAll(title, size, difficultyLevels, boardSizes, buttons);
+		root.getChildren().addAll(title, difficultyLevel, difficultyLevels, boardSize, boardSizes, buttons);
 
 		return root;
 	}
@@ -174,7 +175,9 @@ public class Runner extends Application {
 		Label winText = new Label("Congratulations, you win!");
 		winText.setFont(Font.font(25));
 		
-		timer.setFont(Font.font(20));
+		Label time = new Label("You beat the game on " + difficulty.toString() + " with a time of:");
+		time.setFont(Font.font("Roboto", 25));
+		
 		Button playAgain = new Button("Play Again"); 
 		playAgain.setOnAction(e -> mainStage.setScene(new Scene(getTitleContent(), WIDTH, HEIGHT)));
 		
@@ -184,7 +187,7 @@ public class Runner extends Application {
 		VBox root = new VBox();
 		root.setAlignment(Pos.CENTER);
 		root.setSpacing(15);
-		root.getChildren().addAll(winText, timer, playAgain, exit);
+		root.getChildren().addAll(winText, time, timer, playAgain, exit);
 		
 		return root;
 	}
@@ -232,11 +235,11 @@ public class Runner extends Application {
 			Rectangle border = new Rectangle(BOXSIZE, BOXSIZE);
 			border.setStrokeWidth(3);
 			border.setFill(null);
-			border.setStroke(Color.color(Math.random(), Math.random(), Math.random()));
+			border.setStroke(Color.DARKRED);
 
 			text.setText(value);
 			text.setFont(Font.font("Comic Sans MS", 30));
-			text.setFill(Color.color(Math.random(), Math.random(), Math.random()));
+			text.setFill(Color.BLUEVIOLET);
 
 			setAlignment(Pos.CENTER);
 			getChildren().addAll(border, text);
